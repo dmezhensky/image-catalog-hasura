@@ -1,0 +1,31 @@
+actions:
+  - name: authenticate
+    definition:
+      kind: synchronous
+      handler: 'http://actions:3000/auth'
+    permissions:
+      - role: public
+
+  - name: uploadImage
+    definition:
+      kind: synchronous
+      handler: 'http://actions:3000/upload'
+      forward_client_headers: true
+    permissions:
+      - role: author
+      - role: admin
+
+custom_types:
+  objects:
+    - name: AuthResponse
+      fields:
+        - name: token
+          type: String!
+    - name: ImageResponse
+      fields:
+        - name: id
+          type: uuid!
+        - name: url
+          type: String!
+        - name: status
+          type: String!
