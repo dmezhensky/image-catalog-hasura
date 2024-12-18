@@ -1,0 +1,17 @@
+type Mutation {
+  authenticate(email: String!, password: String!): AuthResponse
+}
+
+type Mutation {
+  uploadImage(file: String!, collection_id: uuid!): ImageResponse
+}
+
+type AuthResponse {
+  token: String!
+}
+
+type ImageResponse {
+  id: uuid!
+  url: String!
+  status: String!
+}

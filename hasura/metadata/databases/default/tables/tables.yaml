@@ -1,0 +1,146 @@
+- table:
+    name: authors
+    schema: public
+- table:
+    name: collections
+    schema: public
+- table:
+    name: collection_authors
+    schema: public
+- table:
+    name: images
+    schema: public
+    select_permissions:
+      - role: author
+        permission:
+          filter:
+            author_id:
+              _eq: X-Hasura-User-Id
+          columns:
+            - id
+            - url
+            - collection_id
+            - status
+      - role: admin
+        permission:
+          filter: { }
+          columns: "*"
+
+      - role: public
+        permission:
+          filter:
+            status:
+              _eq: "published"
+          columns:
+            - id
+            - url
+            - status
+- table:
+    name: image_tags
+    schema: public
+- table:
+    name: tags
+    schema: public
+- table:
+    name: images
+    schema: public
+    object_relationships:
+      - name: author
+        using:
+          foreign_key_constraint_on: author_id
+      - name: collection
+        using:
+          foreign_key_constraint_on: collection_id
+    array_relationships:
+      - name: tags
+        using:
+          foreign_key_constraint_on:
+            column: image_id
+            table:
+              name: image_tags
+              schema: public
+- table:
+    name: authors
+    schema: public
+    array_relationships:
+      - name: collections
+        using:
+          foreign_key_constraint_on:
+            column: author_id
+            table:
+              name: collection_authors
+              schema: public
+      - name: images
+        using:
+          foreign_key_constraint_on:
+            column: author_id
+            table:
+              name: images
+              schema: public
+- table:
+    name: collections
+    schema: public
+    array_relationships:
+      - name: authors
+        using:
+          foreign_key_constraint_on:
+            column: collection_id
+            table:
+              name: collection_authors
+              schema: public
+      - name: images
+        using:
+          foreign_key_constraint_on:
+            column: collection_id
+            table:
+              name: images
+              schema: public
+- table:
+    name: images
+    schema: public
+    object_relationships:
+      - name: author
+        using:
+          foreign_key_constraint_on: author_id
+      - name: collection
+        using:
+          foreign_key_constraint_on: collection_id
+    array_relationships:
+      - name: tags
+        using:
+          foreign_key_constraint_on:
+            column: image_id
+            table:
+              name: image_tags
+              schema: public
+- table:
+    name: tags
+    schema: public
+    array_relationships:
+      - name: images
+        using:
+          foreign_key_constraint_on:
+            column: tag_id
+            table:
+              name: image_tags
+              schema: public
+- table:
+    name: image_tags
+    schema: public
+    object_relationships:
+      - name: image
+        using:
+          foreign_key_constraint_on: image_id
+      - name: tag
+        using:
+          foreign_key_constraint_on: tag_id
+- table:
+    name: collection_authors
+    schema: public
+    object_relationships:
+      - name: author
+        using:
+          foreign_key_constraint_on: author_id
+      - name: collection
+        using:
+          foreign_key_constraint_on: collection_id
